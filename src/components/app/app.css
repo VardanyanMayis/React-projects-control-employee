@@ -1,0 +1,13 @@
+.app {
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.search__pannel {
+    margin-top: 30px;
+    padding: 25px;
+    background: #920000;
+    border-radius: 4px;
+    box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.15);
+    color: white;
+}

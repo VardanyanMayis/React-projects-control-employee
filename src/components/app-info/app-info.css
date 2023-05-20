@@ -1,0 +1,17 @@
+.app__info {
+    padding: 25px;
+    background: #920000;
+    border-radius: 4px;
+    box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.15);
+    color: white;
+}
+
+.app__info h1>span {
+    color: #ff9292;
+    text-shadow: 4px 4px 4px #580000;
+}
+
+.app__info h2>span {
+    color: #ff9292;
+    text-shadow: 4px 4px 4px #580000;
+}
