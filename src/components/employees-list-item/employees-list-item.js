@@ -6,21 +6,25 @@ class EmployeesListItem extends Component {
         super(props);
         this.baseClass = 'list-group-item d-flex justify-content-between'
         this.state = {
-            isPromotion: false,
+            isPromotion: this.props.promotion,
             isPremium: this.props.premium,
         }
     }
 
     bindPremium = () => {
+        const {onPremium} = this.props;
         this.setState(({isPremium}) => ({
             isPremium: !isPremium,
         }));
+        onPremium(!this.state.isPremium);
     }
 
     bindPromotion = () => {
+        const {onPromotion} = this.props;
         this.setState(({isPromotion}) => ({
             isPromotion: !isPromotion,
         }))
+        onPromotion(!this.state.isPromotion);
     }
 
     changeBaseClass(checkState, addClassName) {
@@ -33,8 +37,7 @@ class EmployeesListItem extends Component {
     }
 
     render() {
-        const {fullName, salry} = this.props;
-        const {name, surname} = fullName;
+        const {fullName, salry, onDelete} = this.props;
 
         this.changeBaseClass(this.state.isPremium, 'increase');
         this.changeBaseClass(this.state.isPromotion, 'like');
@@ -42,7 +45,7 @@ class EmployeesListItem extends Component {
         return (
             <li className={this.baseClass}>
                 <span onClick={this.bindPromotion}
-                    className="list-group-item-label">{name} {surname}
+                    className="list-group-item-label">{fullName}
                 </span>
                 <input type="text" className="list-group-item-input" defaultValue={`${salry}$`}/>
                 <div className='d-flex justify-content-center align-items-center'>
@@ -53,7 +56,8 @@ class EmployeesListItem extends Component {
                     </button>
     
                     <button type="button"
-                            className="btn-trash btn-sm ">
+                        onClick={onDelete}
+                        className="btn-trash btn-sm ">
                         <i className="fas fa-trash"></i>
                     </button>
                     <i className="fas fa-star"></i>
