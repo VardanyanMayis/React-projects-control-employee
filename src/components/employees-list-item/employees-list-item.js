@@ -16,7 +16,7 @@ class EmployeesListItem extends Component {
         this.setState(({isPremium}) => ({
             isPremium: !isPremium,
         }));
-        onPremium(!this.state.isPremium);
+        onPremium();
     }
 
     bindPromotion = () => {
@@ -24,7 +24,7 @@ class EmployeesListItem extends Component {
         this.setState(({isPromotion}) => ({
             isPromotion: !isPromotion,
         }))
-        onPromotion(!this.state.isPromotion);
+        onPromotion();
     }
 
     changeBaseClass(checkState, addClassName) {

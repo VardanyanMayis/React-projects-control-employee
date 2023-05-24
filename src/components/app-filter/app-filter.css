@@ -1,3 +1,16 @@
 .btn-group {
     margin-top: 20px;
 }
+
+.inactiveBtn {
+    background: #920000;
+}
+
+.activeBtn {
+    background-color: white;
+    color: black;
+}
+
+.activeBtn:hover {
+    background-color: white;
+}

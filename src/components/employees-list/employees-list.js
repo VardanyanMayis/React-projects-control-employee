@@ -9,8 +9,8 @@ const EmployeesList = ({data, onDelete, onPremium, onPromotion}) => {
             <EmployeesListItem 
                 key={id}
                 {...compProps}
-                onPremium={(status) => onPremium(id, status)}
-                onPromotion={(status) => onPromotion(id, status)}
+                onPremium={() => onPremium(id)}
+                onPromotion={() => onPromotion(id)}
                 onDelete={() => onDelete(id)}
             />
         )

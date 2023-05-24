@@ -19,7 +19,10 @@ class App extends Component {
                 {fullName:'Hayk Boyajyan', salry:450, premium: true, promotion:false, id:uuidv4()},
                 {fullName:'Nare Mkitaryan', salry:1000, premium: false, promotion:true, id:uuidv4()},
                 {fullName:'Abraham Alexsanyan', salry:1200, premium: false, promotion:false, id:uuidv4()},
-            ]
+            ],
+            searchText: '',
+            forPromotion: false,
+            bestSalary: false
         }
     }
 
@@ -30,57 +33,90 @@ class App extends Component {
     }
     
     addItem = (fullName, salry) => {
+        if(fullName.split(' ').join('').length === 0 || salry === '') return;
+
         this.setState(({fakeData}) => ({
             fakeData: [...fakeData, 
                 {fullName: fullName, salry: salry, premium: false, promotion:false, id:uuidv4()}] 
         }))
     }
 
-    changeInfoStatus = (changeInfo, id, status) => {
-        const {fakeData} = this.state;
-        const index = fakeData.findIndex(elem => elem.id === id); 
-        const cloneObj = Object.assign(fakeData[index]);
-
-        cloneObj[changeInfo] = status;
+    // change value of premium or promotion
+    changeInfoStatus = (changeInfo, id) => {
         this.setState(({fakeData}) => ({
-            fakeData: [...fakeData.slice(0, index), cloneObj,
-                ...fakeData.slice(index + 1)]
-        }))
+            fakeData: fakeData.map(item => {
+                if(item.id !== id) return item;
+                return {...item, [changeInfo]: !item[changeInfo]};
+            })
+        }));
     }
 
-    countOfEmployessWithPremum = () => {
-        const {fakeData} = this.state;
-        let count = 0;
-        fakeData.forEach(item => {
-            if(item.premium) count++
-        });
-        return count;
+    // logic for Component search
+    searchEmploees = (date, searchText) => {
+        if(!searchText.length) return date;
+
+        return date.filter(item => item.fullName.toLowerCase().indexOf(
+            searchText.toLowerCase()) > -1
+        );
+    }
+    
+    setFilterEmploees = (settingName) => {
+        if(['forPromotion', 'bestSalary'].indexOf(settingName) >= 0) {
+            this.setState({
+                [settingName]: !this.state[settingName]
+            })
+        } else {
+            this.setState({bestSalary: false, forPromotion: false})
+        }
+    }
+
+    salryFilter = (data) => {
+        if(!this.state.bestSalary) return data;
+        return data.filter(item => item.salry >= 1000);
+    }
+
+    promotionFilter = (data) => {
+        if(!this.state.forPromotion) return data;
+        return data.filter(item => item.promotion);
     }
 
 
     render() {
-        const {fakeData} = this.state;
+        const {fakeData, searchText} = this.state;
+
+        // functions for filter
+        let data = this.salryFilter(fakeData);
+        data = this.promotionFilter(data);
+        data = this.searchEmploees(data, searchText);
+
+
+        const countEmployess = data.length;
+        const countPremum = data.filter(item => item.premium).length;
 
         return (
             <div className='app'>
                 <AppInfo 
                     nameOfCompany={'ARMCompany'}
-                    countOfEmployess={fakeData.length}
-                    countOfEmployessWithPremum={this.countOfEmployessWithPremum()}
+                    countOfEmployess={countEmployess}
+                    countOfEmployessWithPremum={countPremum}
                 />
                 <div className="search__pannel">
-                    <SearchPanelInput />
-                    <SearchPanelFilter />
+                    <SearchPanelInput 
+                        onInput={
+                            (searchText) => this.setState({searchText: searchText})
+                        }
+                    />
+                    <SearchPanelFilter 
+                        onFilter={
+                            (settings) => this.setFilterEmploees(settings)
+                        }
+                    />
                 </div>
     
                 <EmployeesList 
-                    onPremium={(id, salry) => {
-                        this.changeInfoStatus('premium', id, salry)
-                    }}
-                    onPromotion={(id, salry) => {
-                        this.changeInfoStatus('promotion', id, salry)
-                    }}
-                    data={this.state.fakeData} 
+                    onPremium={id => this.changeInfoStatus('premium', id)}
+                    onPromotion={id => this.changeInfoStatus('promotion', id)}
+                    data={data} 
                     onDelete={this.deleteItem}    
                 />
                 <AddEmployess 
