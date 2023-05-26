@@ -8,6 +8,7 @@ class EmployeesListItem extends Component {
         this.state = {
             isPromotion: this.props.promotion,
             isPremium: this.props.premium,
+            salry: this.props.salry
         }
     }
 
@@ -36,18 +37,29 @@ class EmployeesListItem extends Component {
         }
     }
 
-    render() {
-        const {fullName, salry, onDelete} = this.props;
+    // change salry
+    newSelry = (event) => {
+        event.preventDefault();
+        const value = parseInt(event.target.value);
+        this.props.onSelry(value);
+    }
 
-        this.changeBaseClass(this.state.isPremium, 'increase');
-        this.changeBaseClass(this.state.isPromotion, 'like');
+    render() {
+        const {fullName, onDelete} = this.props;
+        const {salry, isPremium, isPromotion} = this.state
+
+        this.changeBaseClass(isPremium, 'increase');
+        this.changeBaseClass(isPromotion, 'like');
 
         return (
             <li className={this.baseClass}>
                 <span onClick={this.bindPromotion}
                     className="list-group-item-label">{fullName}
                 </span>
-                <input type="text" className="list-group-item-input" defaultValue={`${salry}$`}/>
+                <input type="text" 
+                    className="list-group-item-input" 
+                    defaultValue={`${salry}$`}
+                    onChange={(event) => this.newSelry(event)}/>
                 <div className='d-flex justify-content-center align-items-center'>
                     <button type="button"
                         className="btn-cookie btn-sm "

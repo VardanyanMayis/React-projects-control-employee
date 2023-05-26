@@ -60,6 +60,7 @@ class App extends Component {
         );
     }
     
+    // change values for buttons filter
     setFilterEmploees = (settingName) => {
         if(['forPromotion', 'bestSalary'].indexOf(settingName) >= 0) {
             this.setState({
@@ -70,14 +71,25 @@ class App extends Component {
         }
     }
 
-    salryFilter = (data) => {
-        if(!this.state.bestSalary) return data;
-        return data.filter(item => item.salry >= 1000);
+    // filter with buttons
+    buttonsFilter = (data, filterName) => {
+        if(!this.state[filterName]) return data;
+
+        if(this.state[filterName] && filterName === 'bestSalary') {
+            return data.filter(item => item.salry >= 1000);
+        } else if(this.state[filterName] && filterName === 'forPromotion') {
+            return data.filter(item => item.promotion);
+        }
     }
 
-    promotionFilter = (data) => {
-        if(!this.state.forPromotion) return data;
-        return data.filter(item => item.promotion);
+    // change salry
+    newSelry = (key, newSelry) => {
+        this.setState(({fakeData}) => ({
+            fakeData: fakeData.map(item => {
+                if(item.id !== key) return item;
+                return {...item, salry: newSelry}
+            })
+        }))
     }
 
 
@@ -85,8 +97,8 @@ class App extends Component {
         const {fakeData, searchText} = this.state;
 
         // functions for filter
-        let data = this.salryFilter(fakeData);
-        data = this.promotionFilter(data);
+        let data = this.buttonsFilter(fakeData, 'bestSalary');
+        data = this.buttonsFilter(data, 'forPromotion');
         data = this.searchEmploees(data, searchText);
 
 
@@ -116,6 +128,7 @@ class App extends Component {
                 <EmployeesList 
                     onPremium={id => this.changeInfoStatus('premium', id)}
                     onPromotion={id => this.changeInfoStatus('promotion', id)}
+                    onSelry={(id, newSelry) => this.newSelry(id, newSelry)}
                     data={data} 
                     onDelete={this.deleteItem}    
                 />

@@ -4,12 +4,20 @@ import './app-filter.css';
 class SearchPanelFilter extends Component {
     constructor(props) {
         super(props);
+        this.buttonsData = [
+            {data: 'allEmployees', label: 'Все сотрудники'},
+            {data: 'forPromotion', label: 'На повышение'},
+            {data: 'bestSalary', label: 'З/П больше 1000$'}
+        ]
+
+
         this.state = {
             forPromotion: false,
             bestSalary: false
         }
     }
 
+    // function for set and change events
     changeActiveBtn = (event) => {
         event.preventDefault();
         const btnData = event.target.dataset.type;
@@ -38,29 +46,24 @@ class SearchPanelFilter extends Component {
             allEmployeesClass += ' activeBtn';
         }
 
+        // function for create buttons
+        const buttons = this.buttonsData.map(({data, label}) => (
+                    <button 
+                        key={label}
+                        className={
+                            (data === 'forPromotion') ? forPromotionClass :
+                            (data === 'bestSalary') ? bestSalaryClass : allEmployeesClass
+                        } 
+                        type="button"
+                        data-type={data}
+                        onClick={this.changeActiveBtn}>
+                    {label}
+                    </button>
+                ));
+
         return (
-            <div className="btn-group">
-            <button 
-                className={allEmployeesClass} 
-                type="button"
-                data-type="allEmployees"
-                onClick={this.changeActiveBtn}>
-                Все сотрудники
-            </button>
-            <button 
-                className={forPromotionClass} 
-                type="button"
-                data-type="forPromotion"
-                onClick={this.changeActiveBtn}>
-                На повышение
-            </button>
-            <button 
-                className={bestSalaryClass} 
-                type="button"
-                data-type="bestSalary"
-                onClick={this.changeActiveBtn}>
-                З/П больше 1000$
-            </button>
+        <div className="btn-group">
+            {buttons}
         </div>
         )
     }
